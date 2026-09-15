@@ -6,7 +6,7 @@ from config import (
     SCREEN_WIDTH, SCREEN_HEIGHT, GRAVITY, JUMP_VELOCITY, SPRING_JUMP_VELOCITY,
     DOODLE_SPEED, DOODLE_WIDTH, DOODLE_HEIGHT, PLATFORM_WIDTH,
     MIN_PLATFORM_GAP, MAX_PLATFORM_GAP, CAMERA_SCROLL_THRESHOLD,
-    PLATFORMS, doodle_dict, DOODLE_START_X, DOODLE_START_Y, LIVES
+    PLATFORMS, doodle_dict, DOODLE_START_X, DOODLE_START_Y, LIVES, PLATFORM_HEIGHT
 )
 from platforms import create_platform, choose_platform_type
 from doodle import doodle_left_img, doodle_right_img
@@ -19,6 +19,9 @@ def apply_gravity():
     Applique la gravité au Doodle en augmentant progressivement sa vitesse verticale (vel_y).
     Met à jour la position verticale (y) du Doodle.
     """
+    doodle_dict["vel_y"] += GRAVITY
+    doodle_dict["y"] += doodle_dict["vel_y"]
+
     # TODO : Mettez à jour la vitesse verticale puis la position verticale
     # du Doodle à partir de GRAVITY.
 
@@ -46,14 +49,13 @@ def move_doodle():
     # TODO : Gérez les déplacements gauche/droite et mettez à jour
     # simultanément la direction et l'image du Doodle.
 
-
-
+    if doodle_dict["x"] > SCREEN_WIDTH:
+        doodle_dict["x"] = 0
+    elif doodle_dict["x"] < 0:
+        doodle_dict["x"] = SCREEN_WIDTH
     # TODO : Implémentez le Screen Wrap pour qu'une partie du Doodle puisse
     # sortir d'un côté avant de réapparaître de l'autre.
     # N'utilisez pas de dimensions numériques écrites directement.
-
-
-
     return
 
 # ===========================================================
@@ -65,6 +67,14 @@ def move_platforms():
     Déplace horizontalement les plateformes mobiles ("blue").
     Fait rebondir les plateformes lorsqu'elles atteignent les bords de la fenêtre.
     """
+    for platforme in PLATFORMS:
+        if platforme['type'] == "blue":
+            platforme["x"] += platforme["vx"]
+            if platforme["x"] > SCREEN_WIDTH - PLATFORM_WIDTH:
+                platforme["vx"] = -platforme["vx"]
+            elif platforme["x"] < SCREEN_WIDTH:
+                platforme["vx"] = -platforme["vx"]
+
     # TODO : Parcourez les plateformes et gérez le déplacement des plateformes
     # bleues encore actives. Elles doivent rester dans la fenêtre en inversant
     # leur vitesse lorsqu'elles atteignent un bord.
@@ -82,7 +92,15 @@ def check_platform_collisions():
     et qu'il arrive sur le dessus d'une plateforme.
     """
     # TODO : Implémentez la détection d'un atterrissage.
-    #
+    if doodle_dict["vel_y"] < 0:
+        pass
+    else:
+        for platform in PLATFORMS:
+            r1 = (platform["x"], platform["y"], PLATFORM_WIDTH, PLATFORM_HEIGHT)
+            r2 = (doodle_dict["x"], doodle_dict["y"], DOODLE_WIDTH, DOODLE_HEIGHT)
+            if rects_collide(r1, r2):
+                doodle_dict["vel_y"] = JUMP_VELOCITY
+
     # Contraintes :
     # - aucun rebond pendant la montée ;
     # - ignorer les plateformes inactives ;
