@@ -33,8 +33,16 @@ def move_doodle():
     Gère le déplacement horizontal du Doodle selon les touches pressées (Flèches ou A/D).
     Implémente le passage fluide d'un côté de l'écran à l'autre (Screen Wrap).
     """
-    keys = pygame.key.get_pressed()
+    keys = pygame.key.get_pressed() 
 
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        doodle_dict['direction'] = 'left'
+        doodle_dict['image'] = doodle_right_img
+        doodle_dict['x'] -= DOODLE_SPEED
+    elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        doodle_dict['direction'] = 'right'
+        doodle_dict['image'] = doodle_left_img
+        doodle_dict['x'] += DOODLE_SPEED
     # TODO : Gérez les déplacements gauche/droite et mettez à jour
     # simultanément la direction et l'image du Doodle.
 
