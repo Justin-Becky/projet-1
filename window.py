@@ -38,13 +38,14 @@ def generate_initial_platforms():
     current_y = DOODLE_START_Y + 70 - random.randint(MIN_PLATFORM_GAP, MAX_PLATFORM_GAP)
 
     # ======================== PARTIE 2.2 ========================
-    while current_y < -1*SCREEN_HEIGHT:
+    while current_y > doodle_dict['y']-SCREEN_HEIGHT:
         platform_position_x = random.randrange(0, SCREEN_WIDTH-PLATFORM_WIDTH)
         platform_type = choose_platform_type(0.65, 0.17, 0.10)
         platform = create_platform(platform_position_x, current_y, platform_type)
         PLATFORMS.append(platform)
         
         current_y -= random.randint(MIN_PLATFORM_GAP, MAX_PLATFORM_GAP)
+        print(current_y)
 
     # TODO : Ajoutez des plateformes jusqu'à ce que la partie supérieure
     # de l'écran soit remplie.
