@@ -160,6 +160,14 @@ def generate_new_platforms():
     Génère de nouvelles plateformes au-dessus du haut de l'écran pour maintenir
     un flux continu lorsque la caméra défile.
     """
+    if len(PLATFORMS) != 0:
+        highest_platform = PLATFORMS[-1]
+        if doodle_dict['y'] -SCREEN_HEIGHT < highest_platform['y']:
+            new_platform_type = choose_platform_type(0.55, 0.20, 0.13)
+            new_platform_position_x = random.randint(0, SCREEN_WIDTH-PLATFORM_WIDTH)
+            new_platform_position_y = highest_platform['y'] - random.randint(MIN_PLATFORM_GAP, MAX_PLATFORM_GAP)
+            new_platform = create_platform(new_platform_position_x, new_platform_position_y, new_platform_type)
+            PLATFORMS.append(new_platform)
     # TODO : Complétez cette fonction en vous inspirant de la logique de
     # génération initiale, sans la recopier inutilement.
     #
