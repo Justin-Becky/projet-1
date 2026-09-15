@@ -19,6 +19,7 @@ def apply_gravity():
     Applique la gravité au Doodle en augmentant progressivement sa vitesse verticale (vel_y).
     Met à jour la position verticale (y) du Doodle.
     """
+
     # TODO : Mettez à jour la vitesse verticale puis la position verticale
     # du Doodle à partir de GRAVITY.
 
@@ -46,14 +47,13 @@ def move_doodle():
     # TODO : Gérez les déplacements gauche/droite et mettez à jour
     # simultanément la direction et l'image du Doodle.
 
-
-
+    if doodle_dict["x"] > SCREEN_WIDTH:
+        doodle_dict["x"] = 0
+    elif doodle_dict["x"] < 0:
+        doodle_dict["x"] = SCREEN_WIDTH
     # TODO : Implémentez le Screen Wrap pour qu'une partie du Doodle puisse
     # sortir d'un côté avant de réapparaître de l'autre.
     # N'utilisez pas de dimensions numériques écrites directement.
-
-
-
     return
 
 # ===========================================================
@@ -65,6 +65,14 @@ def move_platforms():
     Déplace horizontalement les plateformes mobiles ("blue").
     Fait rebondir les plateformes lorsqu'elles atteignent les bords de la fenêtre.
     """
+    for platforme in PLATFORMS:
+        if platforme['type'] == "blue":
+            platforme["x"] += platforme["vx"]
+            if platforme["x"] > SCREEN_WIDTH - PLATFORM_WIDTH:
+                platforme["vx"] = -platforme["vx"]
+            elif platforme["x"] < SCREEN_WIDTH:
+                platforme["vx"] = -platforme["vx"]
+
     # TODO : Parcourez les plateformes et gérez le déplacement des plateformes
     # bleues encore actives. Elles doivent rester dans la fenêtre en inversant
     # leur vitesse lorsqu'elles atteignent un bord.
