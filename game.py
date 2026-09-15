@@ -72,7 +72,7 @@ def move_platforms():
             platforme["x"] += platforme["vx"]
             if platforme["x"] > SCREEN_WIDTH - PLATFORM_WIDTH:
                 platforme["vx"] = -platforme["vx"]
-            elif platforme["x"] < SCREEN_WIDTH:
+            elif platforme["x"] < 0:
                 platforme["vx"] = -platforme["vx"]
 
     # TODO : Parcourez les plateformes et gérez le déplacement des plateformes
@@ -97,9 +97,15 @@ def check_platform_collisions():
     else:
         for platform in PLATFORMS:
             r1 = (platform["x"], platform["y"], PLATFORM_WIDTH, PLATFORM_HEIGHT)
-            r2 = (doodle_dict["x"], doodle_dict["y"], DOODLE_WIDTH, DOODLE_HEIGHT)
+            r2 = (doodle_dict["x"], doodle_dict["y"] + DOODLE_HEIGHT, DOODLE_WIDTH // 2, 0)
             if rects_collide(r1, r2):
-                doodle_dict["vel_y"] = JUMP_VELOCITY
+                if platform["type"] == "spring":
+                    doodle_dict["vel_y"] = SPRING_JUMP_VELOCITY
+                elif platform["type"] == "brown":
+                    doodle_dict["vel_y"] = JUMP_VELOCITY
+                    PLATFORMS.remove(platform)
+                else:
+                    doodle_dict["vel_y"] = JUMP_VELOCITY
 
     # Contraintes :
     # - aucun rebond pendant la montée ;
@@ -124,6 +130,17 @@ def scroll_camera():
     Fait défiler le monde lorsque le Doodle dépasse CAMERA_SCROLL_THRESHOLD.
     Met à jour le score et maintient les plateformes visibles.
     """
+    if doodle_dict["y"] < CAMERA_SCROLL_THRESHOLD:
+        decalage = doodle_dict["y"] - CAMERA_SCROLL_THRESHOLD
+        doodle_dict["score"] -= decalage
+        doodle_dict["y"] = CAMERA_SCROLL_THRESHOLD
+        if doodle_dict["score"] > doodle_dict["high_score"]:
+            doodle_dict["high_score"] = doodle_dict["score"]
+        for platform in PLATFORMS:
+            platform["y"] -= decalage
+            if platform["y"] > SCREEN_HEIGHT:
+                PLATFORMS.remove(platform)
+
     # TODO : Lorsque le Doodle dépasse le seuil de caméra, il doit rester
     # visuellement au seuil pendant que les plateformes sont déplacées vers
     # le bas de la même distance.
