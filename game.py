@@ -140,6 +140,7 @@ def scroll_camera():
             platform["y"] -= decalage
             if platform["y"] > SCREEN_HEIGHT:
                 PLATFORMS.remove(platform)
+    generate_new_platforms()
 
     # TODO : Lorsque le Doodle dépasse le seuil de caméra, il doit rester
     # visuellement au seuil pendant que les plateformes sont déplacées vers
