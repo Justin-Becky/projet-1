@@ -163,7 +163,7 @@ def generate_new_platforms():
     """
     if len(PLATFORMS) != 0:
         highest_platform = PLATFORMS[-1]
-        if doodle_dict['y'] -SCREEN_HEIGHT < highest_platform['y']:
+        if highest_platform['y'] > 0:
             new_platform_type = choose_platform_type(0.55, 0.20, 0.13)
             new_platform_position_x = random.randint(0, SCREEN_WIDTH-PLATFORM_WIDTH)
             new_platform_position_y = highest_platform['y'] - random.randint(MIN_PLATFORM_GAP, MAX_PLATFORM_GAP)
